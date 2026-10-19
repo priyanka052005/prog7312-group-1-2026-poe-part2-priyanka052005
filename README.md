@@ -1,12 +1,12 @@
-# Smart-X Part 1  Data Ingestion and Validation Gateway
+# Smart-X  Part 1: Data Ingestion and Validation Gateway
 
 ## Overview
 
-This project implements Part 1 of the Smart-X IoT Mesh Ecosystem.
+For Part 1, I built the Smart-X IoT gateway to register sensors, accept different types of readings and check that the incoming data makes sense. IoT is basically about connected devices sending and sharing data, which is the main idea behind this project (Amazon Web Services, 2022; IBM, 2023b).
 
-The application contains:
+Here is the main stuff I included:
 
-- A .NET 10 ASP.NET Core backend API.
+- A .NET 8 ASP.NET Core backend API.
 - A browser-based frontend dashboard.
 - Sensor registration.
 - Simulated multi-type telemetry ingestion.
@@ -45,7 +45,7 @@ dotnet build
 dotnet run
 ```
 
-The terminal will display a local URL such as:
+The terminal will display a local URL, for example:
 
 ```text
 http://localhost:5000
@@ -164,7 +164,7 @@ Maximum file size: 5 MB.
 
 `Models/TelemetryPacket.cs`
 
-The class is generic and supports different telemetry data types without one fixed value type.
+I used a generic class so the same packet thingy can handle different data types, instead of making a seperate class for every reading (BillWagner, 2026b).
 
 ### Operator Overloading
 
@@ -184,7 +184,7 @@ Test endpoint:
 POST /api/telemetry/demo-batch
 ```
 
-This creates `double[][]` batches and moves the values into a `List<double>`.
+This demo makes `double[][]` batches and then moves the readings into a `List<double>`, so they are easier to work with (BillWagner, 2023b).
 
 ### Recursion
 
@@ -196,11 +196,11 @@ Test endpoint:
 GET /api/demo/recursive-validation
 ```
 
-The recursive method validates the deployment path from Facility -> Zone -> Sub-Zone -> Sensor.
+The recursive method goes through the deployment path, from Facility -> Zone -> Sub-Zone -> Sensor, and checks the levels one by one.
 
 ## Dynamic Engagement Strategy
 
-The dashboard uses a live anomaly and sensor-disconnect alert panel.
+I added an anomaly and sensor-disconnect alert panel to the dashboard. This helps flag readings that look unusual, which is an important part of monitoring IoT systems (Chatterjee and Ahmed, 2022).
 
 It highlights:
 
@@ -209,11 +209,11 @@ It highlights:
 - Power spikes.
 - Sensors that have stopped sending telemetry.
 
-This gives operators immediate visual feedback and helps them identify problematic sensors quickly.
+Basically, it gives the user a quick heads-up when something seems wrong, instead of making them search through all the sensor data. Dashboards are useful for bringing monitoring info together in one place (Grafana Labs, 2025).
 
 ## GitHub
 
-Create a GitHub repository and commit regularly while developing the project.
+I use GitHub to keep my project files and track changes as I work (GitHub Docs, 2026). The messages below are examples of the kind of commits I can make, not a claim that every one has already been committed.
 
 Example commit messages:
 
@@ -242,13 +242,13 @@ Final Part 1 testing
 ---
 
 
-# Smart-X Part 2  Advanced Data Structures and Predictive Intelligence
+# Smart-X  Part 2: Advanced Data Structures and Predictive Intelligence
 
 ## Overview
 
-Part 2 extends the Smart-X IoT Mesh Ecosystem with advanced C# collections, priority-based telemetry processing, command management, and predictive recommendations.
+For Part 2, I built on the gateway from Part 1. I added different C# collections to organise the sensor readings, handle urgent data first, undo commands and make suggestions when a sensor looks like it might need attention (BillWagner, 2023a; IBM, 2022).
 
-The application consists of an ASP.NET Core REST API and a browser-based frontend developed using HTML, CSS and JavaScript.
+The backend is an ASP.NET Core REST API and the dashboard uses HTML, CSS and JavaScript. The frontend sends requests to the API and displays the results (JeremyLikness, 2025; developer.mozilla.org, n.d.).
 
 ## Part 2 Features
 
@@ -268,9 +268,9 @@ The application consists of an ASP.NET Core REST API and a browser-based fronten
 
 **File:** `Services/TelemetryQueueService.cs`
 
-`Queue<T>` processes normal telemetry in First-In, First-Out order.
+I use `Queue<T>` for normal telemetry. It works on a First-In, First-Out (FIFO) basis, so the oldest waiting reading goes first (dotnet-bot, 2026c).
 
-`PriorityQueue<TElement, TPriority>` prioritises critical telemetry, allowing urgent readings to be processed before normal readings.
+The `PriorityQueue<TElement, TPriority>` is for urgent readings. This means critical stuff can be processed before normal readings, even if it arrived later (dotnet-bot, 2026b).
 
 Critical conditions include:
 
@@ -282,53 +282,53 @@ Critical conditions include:
 
 **File:** `Services/CommandService.cs`
 
-`Stack<T>` maintains an undo history for simulated device commands.
+I used `Stack<T>` to keep track of simulated device commands so there is an undo option (dotnet-bot, 2026e).
 
-When a command is reversed, the previous device state is restored using Last-In, First-Out processing.
+When I undo something, the most recent command is reversed first. This is Last-In, First-Out (LIFO).
 
 ### Dictionary
 
 **File:** `Services/SmartXStore.cs`
 
-`Dictionary<TKey, TValue>` stores registered devices by their unique device IDs, allowing efficient lookup and validation.
+I use `Dictionary<TKey, TValue>` to store each registered sensor under its device ID. This makes it easier to look up a sensor and check if it is registered before accepting readings (dotnet-bot, 2025).
 
 ### SortedDictionary
 
 **File:** `Services/TelemetryHistoryService.cs`
 
-`SortedDictionary<TKey, TValue>` maintains telemetry records in chronological order for history retrieval and trend analysis.
+`SortedDictionary<TKey, TValue>` keeps the telemetry history sorted by its date and time, so I can look back at readings in order (dotnet-bot, 2026d).
 
 ### HashSet
 
 **File:** `Services/DisconnectAlertService.cs`
 
-`HashSet<T>` tracks devices with active disconnect alerts and prevents duplicate notifications for the same device.
+I used `HashSet<T>` for the disconnect alerts. It keeps track of which sensors already have an alert, so the app does not keep adding the same alert over and over (dotnet-bot, 2026a).
 
 ## Predictive Recommendation Engine
 
 **File:** `Services/PredictionService.cs`
 
-The predictive engine analyses telemetry trends, device search activity, command history and critical thresholds to generate suggested actions.
+The prediction feature checks sensor trends, device searches, command history and critical limits to suggest what the user could do next. This is a simple rule-based approach, not a trained AI model (IBM, 2022).
 
 ### Trend Detection
 
-The system identifies patterns such as continuously decreasing moisture readings.
+For example, it looks for patterns like moisture dropping over several readings.
 
 For example:
 
 `65 → 55 → 45 → 35 → 25`
 
-This pattern can produce a `MONITOR` recommendation.
+If the moisture keeps going down like this, the app can suggest `MONITOR`.
 
 ### Critical Predictions
 
-When a moisture reading falls below 20%, the system can generate an `INSPECT` recommendation.
+When moisture goes below 20%, it can suggest `INSPECT` because the reading is now critical.
 
 ### Cross-Device Predictions
 
-When environmental sensor `ESP32-A1` detects critically low moisture, the system can recommend checking whether irrigation actuator `ESP32-C3` should be started.
+If environmental sensor `ESP32-A1` reports very low moisture, the system can also suggest `START` for the irrigation actuator `ESP32-C3`. I wanted the recommendations to connect related devices, not just look at one sensor on its own.
 
-Recommendations are advisory and do not automatically execute commands.
+These are only suggestions. The app does **not** automatically start the actuator.
 
 ## Part 2 API Endpoints
 
@@ -473,9 +473,9 @@ SmartX.VisualStudio.sln
 
 ## Conclusion
 
-Smart-X Part 2 demonstrates the practical application of advanced C# collections within a simulated IoT environment. The system supports prioritised telemetry processing, efficient device lookup, command undo, duplicate-alert prevention, and predictive recommendations based on device activity and telemetry trends.
+Overall, Part 2 helped me put the different C# collections into an actual IoT example instead of only using them in seperate exercises. I can now prioritise urgent readings, look up devices, undo commands, avoid duplicate alerts and show recommendations based on the data.
 
-## Part 2 Testing Instructions
+## Extra Part 2 Testing Instructions
 
 ### Testing the Queue and PriorityQueue
 1. Run the application using `dotnet run`.
@@ -505,7 +505,9 @@ Smart-X Part 2 demonstrates the practical application of advanced C# collections
 - `Dictionary<TKey, TValue>` supports registered device lookup and validation.
 - `SortedDictionary<TKey, TValue>` maintains chronological telemetry history.
 
-### Reference list
+---
+
+## References
 
 aartig13 (2022). *Implement custom collections in visual C# - C#*. [online] MicrosoftLearn. Available at: https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/csharp/language-compilers/implement-custom-collection [Accessed 14 Sept. 2026].
 
