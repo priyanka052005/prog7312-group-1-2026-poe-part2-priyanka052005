@@ -1,4 +1,4 @@
-# Smart-X  Part 1: Data Ingestion and Validation Gateway
+# Smart-X — Part 1: Data Ingestion and Validation Gateway
 
 ## Overview
 
@@ -45,7 +45,7 @@ dotnet build
 dotnet run
 ```
 
-The terminal will display a local URL, for example:
+The terminal will display a local URL. On my setup I normally use `http://localhost:5188`, but the actual port can change. For example:
 
 ```text
 http://localhost:5000
@@ -60,6 +60,8 @@ https://localhost:7000
 Open that URL in your browser.
 
 ## Main API Endpoints
+
+These are the routes my backend exposes. The API accepts requests and sends back results, so I can test the sensor stuff without having to use the dashboard every time (ardalis, 2026a).
 
 ### API health
 
@@ -160,15 +162,19 @@ Maximum file size: 5 MB.
 
 ## Advanced C# Requirement Demonstrations
 
+This section shows where I used the C# features we had to demonstrate. I used the Microsoft C# collection documentation to help understand how the data types work (aartig13, 2022; BillWagner, 2023b).
+
 ### Generics
 
 `Models/TelemetryPacket.cs`
 
-I used a generic class so the same packet thingy can handle different data types, instead of making a seperate class for every reading (BillWagner, 2026b).
+I used a generic class so the same packet can handle different data types, instead of making a separate class for every reading (BillWagner, 2026b).
 
 ### Operator Overloading
 
 `Models/PowerReading.cs`
+
+This is my example of defining how a custom `PowerReading` type behaves when values are combined.
 
 Test endpoint:
 
@@ -190,6 +196,8 @@ This demo makes `double[][]` batches and then moves the readings into a `List<do
 
 `Services/DeploymentValidator.cs`
 
+I use recursion to go through the deployment levels until the sensor is reached, rather than checking every level seperately.
+
 Test endpoint:
 
 ```http
@@ -200,7 +208,7 @@ The recursive method goes through the deployment path, from Facility -> Zone -> 
 
 ## Dynamic Engagement Strategy
 
-I added an anomaly and sensor-disconnect alert panel to the dashboard. This helps flag readings that look unusual, which is an important part of monitoring IoT systems (Chatterjee and Ahmed, 2022).
+I added an anomaly and sensor-disconnect alert panel to the dashboard. It helps flag readings that look unusual, which is important when monitoring lots of IoT devices (Großmann, Illig and Matějka, 2019).
 
 It highlights:
 
@@ -213,7 +221,7 @@ Basically, it gives the user a quick heads-up when something seems wrong, instea
 
 ## GitHub
 
-I use GitHub to keep my project files and track changes as I work (GitHub Docs, 2026). The messages below are examples of the kind of commits I can make, not a claim that every one has already been committed.
+I use Git and GitHub to keep track of the project as I work. The messages below are examples of useful commits, not a claim that I have already made all of them.
 
 Example commit messages:
 
@@ -242,13 +250,13 @@ Final Part 1 testing
 ---
 
 
-# Smart-X  Part 2: Advanced Data Structures and Predictive Intelligence
+# Smart-X — Part 2: Advanced Data Structures and Predictive Intelligence
 
 ## Overview
 
-For Part 2, I built on the gateway from Part 1. I added different C# collections to organise the sensor readings, handle urgent data first, undo commands and make suggestions when a sensor looks like it might need attention (BillWagner, 2023a; IBM, 2022).
+For Part 2, I built on the gateway from Part 1. I added different C# collections to organise sensor readings, handle urgent data first, undo commands and make suggestions when a sensor looks like it might need attention (BillWagner, 2023a; IBM, 2022).
 
-The backend is an ASP.NET Core REST API and the dashboard uses HTML, CSS and JavaScript. The frontend sends requests to the API and displays the results (JeremyLikness, 2025; developer.mozilla.org, n.d.).
+The backend is an ASP.NET Core REST API and the dashboard uses HTML, CSS and JavaScript. The frontend sends requests to the API and displays the results (JeremyLikness, 2025; developer.mozilla.org, n.d.). This lets me show live updates without reloading the whole page.
 
 ## Part 2 Features
 
@@ -308,7 +316,7 @@ I used `HashSet<T>` for the disconnect alerts. It keeps track of which sensors a
 
 **File:** `Services/PredictionService.cs`
 
-The prediction feature checks sensor trends, device searches, command history and critical limits to suggest what the user could do next. This is a simple rule-based approach, not a trained AI model (IBM, 2022).
+The prediction feature checks sensor trends, device searches, command history and critical limits to suggest what the user could do next. This is my own rule-based approach, not a trained AI model. Predictive analytics can use past data to help anticipate issues, which is the idea behind this feature (IBM, 2022).
 
 ### Trend Detection
 
@@ -359,6 +367,8 @@ GET /api/predictions
 ```
 
 ## Running and Testing Part 2
+
+The steps below are how I check that the frontend and API are actually working together. I also test the API directly because REST endpoints can be called separately from the webpage (cheatsheetseries.owasp.org, n.d.).
 
 ### Requirements
 
@@ -462,6 +472,8 @@ SmartX.VisualStudio.sln
 
 ## Technologies Used
 
+I used C# and ASP.NET Core for the API, then HTML, CSS and JavaScript for the browser dashboard (guardrex, 2026; MDN Contributors, 2023; MDN WEB DOCS, 2019; Mozilla, 2018).
+
 - C#
 - .NET 8
 - ASP.NET Core
@@ -478,6 +490,8 @@ Overall, Part 2 helped me put the different C# collections into an actual IoT ex
 ## Extra Part 2 Testing Instructions
 
 ### Testing the Queue and PriorityQueue
+
+The normal queue follows FIFO, but the priority queue puts urgent packets ahead of the normal ones (dotnet-bot, 2026b; dotnet-bot, 2026c).
 1. Run the application using `dotnet run`.
 2. Open the Smart-X dashboard and navigate to **Part 2**.
 3. Select the **Queue Demo** option to generate sample telemetry.
@@ -492,6 +506,8 @@ Overall, Part 2 helped me put the different C# collections into an actual IoT ex
 5. Verify that the critical reading receives priority.
 
 ### Testing the Dictionary
+
+The registered-device lookup is based on a `Dictionary<TKey, TValue>` keyed by the sensor ID (dotnet-bot, 2025).
 1. Navigate to **Part 1**.
 2. View the registered sensors.
 3. Submit telemetry for an existing sensor, such as `ESP32-A1`.
