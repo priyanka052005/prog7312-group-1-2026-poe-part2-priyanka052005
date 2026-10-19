@@ -1,4 +1,4 @@
-# Smart-X Part 1 — Data Ingestion and Validation Gateway
+# Smart-X Part 1  Data Ingestion and Validation Gateway
 
 ## Overview
 
@@ -242,7 +242,7 @@ Final Part 1 testing
 ---
 
 
-# Smart-X Part 2 — Advanced Data Structures and Predictive Intelligence
+# Smart-X Part 2  Advanced Data Structures and Predictive Intelligence
 
 ## Overview
 
@@ -379,7 +379,7 @@ dotnet run
 
 Open the local URL displayed in the terminal.
 
-### Test 1 — Priority Queue
+### Test 1  Priority Queue
 
 1. Open the Part 2 dashboard.
 2. Generate demo telemetry using the queue demonstration feature.
@@ -387,7 +387,7 @@ Open the local URL displayed in the terminal.
 4. Process the queued readings.
 5. Confirm that critical telemetry is processed before normal telemetry.
 
-### Test 2 — Command Undo
+### Test 2  Command Undo
 
 1. Open the device command section.
 2. Execute a simulated command.
@@ -395,7 +395,7 @@ Open the local URL displayed in the terminal.
 4. Use the undo functionality.
 5. Confirm that the previous device state is restored.
 
-### Test 3 — Duplicate Disconnect Prevention
+### Test 3  Duplicate Disconnect Prevention
 
 Run the following commands in PowerShell while Smart-X is running:
 
@@ -410,7 +410,7 @@ Expected result:
 - First request: `alertCreated = true`.
 - Second request: `alertCreated = false`.
 
-### Test 4 — Predictive Recommendations
+### Test 4  Predictive Recommendations
 
 Submit decreasing moisture readings for `ESP32-A1` and open:
 
@@ -420,7 +420,7 @@ GET /api/predictions
 
 Expected result: A recommendation identifying the declining moisture trend.
 
-### Test 5 — Cross-Device Predictions
+### Test 5  Cross-Device Predictions
 
 Submit a moisture reading of 12% for `ESP32-A1`.
 
@@ -432,8 +432,8 @@ GET /api/predictions
 
 Expected recommendations:
 
-- `ESP32-A1` — `INSPECT`.
-- `ESP32-C3` — `START`.
+- `ESP32-A1`  `INSPECT`.
+- `ESP32-C3`  `START`.
 
 The second recommendation is advisory and relates to the simulated irrigation actuator.
 
@@ -475,7 +475,7 @@ SmartX.VisualStudio.sln
 
 Smart-X Part 2 demonstrates the practical application of advanced C# collections within a simulated IoT environment. The system supports prioritised telemetry processing, efficient device lookup, command undo, duplicate-alert prevention, and predictive recommendations based on device activity and telemetry trends.
 
-## Part 2 — Testing Instructions
+## Part 2 Testing Instructions
 
 ### Testing the Queue and PriorityQueue
 1. Run the application using `dotnet run`.
