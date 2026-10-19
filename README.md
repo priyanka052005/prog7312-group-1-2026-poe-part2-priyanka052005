@@ -1,4 +1,4 @@
-# Smart-X — Part 1: Data Ingestion and Validation Gateway
+# Smart-X  Part 1: Data Ingestion and Validation Gateway
 
 ## Overview
 
@@ -250,7 +250,7 @@ Final Part 1 testing
 ---
 
 
-# Smart-X — Part 2: Advanced Data Structures and Predictive Intelligence
+# Smart-X  Part 2: Advanced Data Structures and Predictive Intelligence
 
 ## Overview
 
