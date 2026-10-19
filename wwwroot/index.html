@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart-X IoT Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="topbar">
+       <div class="brand">
+    <img src="smartx-logo.png" alt="Smart-X Logo" class="brand-logo">
+    <div>
+        <h1>Smart-X</h1>
+        <p>IoT Data Ingestion & Validation Gateway</p>
+    </div>
+</div>
+        <span id="apiStatus" class="status-pill">Checking API...</span>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <span class="eyebrow">SMART-X IOT MESH ECOSYSTEM</span>
+            <h2 id="pageTitle">Smart-X Gateway Dashboard</h2>
+            <p id="pageDescription">
+                Register simulated IoT sensors, send multi-type telemetry,
+                attach device files, and monitor anomaly alerts.
+            </p>
+        </section>
+
+        <section class="pillars-grid">
+            <button class="pillar active" id="sensorPillar" type="button" onclick="showSensorDashboard()">
+                <span>01</span>
+                <strong>Sensor Data Ingestion & Telemetry</strong>
+                <small>Part 1 — Available</small>
+            </button>
+
+            <button class="pillar" id="commandPillar" type="button" onclick="showCommandStream()">
+                <span>02</span>
+                <strong>Real-Time Command Stream & History</strong>
+                <small>Part 2 — Available</small>
+            </button>
+
+            <button class="pillar disabled" type="button" disabled>
+                <span>03</span>
+                <strong>Network Topology & Mesh Routing</strong>
+                <small>Final PoE — Coming Soon</small>
+            </button>
+        </section>
+
+        <div id="sensorDashboard">
+            <section class="stats-grid">
+                <article class="stat-card">
+                    <small>Registered Sensors</small>
+                    <strong id="sensorCount">0</strong>
+                </article>
+
+                <article class="stat-card">
+                    <small>Telemetry Records</small>
+                    <strong id="telemetryCount">0</strong>
+                </article>
+
+                <article class="stat-card">
+                    <small>Active Alerts</small>
+                    <strong id="alertCount">0</strong>
+                </article>
+            </section>
+
+            <section class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">DYNAMIC ENGAGEMENT</span>
+                        <h3>Live Anomaly & Disconnect Alerts</h3>
+                    </div>
+                    <button class="secondary-btn" type="button" onclick="loadAll()">Refresh</button>
+                </div>
+
+                <div id="alerts" class="alert-list"></div>
+            </section>
+
+            <section class="two-column">
+                <div class="panel">
+                    <span class="eyebrow">REGISTER</span>
+                    <h3>Add Sensor</h3>
+
+                    <form id="sensorForm">
+                        <label for="deviceId">Device MAC / Unique ID</label>
+                        <input id="deviceId" required placeholder="ESP32-D4">
+
+                        <label for="location">Deployment Location</label>
+                        <input id="location" required placeholder="Facility A / Zone 2">
+
+                        <label for="category">Sensor Category</label>
+                        <select id="category" required>
+                            <option value="">Choose category</option>
+                            <option>Environmental</option>
+                            <option>Power Consumption</option>
+                            <option>Actuator</option>
+                        </select>
+
+                        <button class="primary-btn" type="submit">Register Sensor</button>
+                    </form>
+
+                    <p id="sensorMessage" class="form-message"></p>
+                </div>
+
+                <div class="panel">
+                    <span class="eyebrow">SIMULATE</span>
+                    <h3>Send Telemetry</h3>
+
+                    <form id="telemetryForm">
+                        <label for="telemetryDevice">Sensor</label>
+                        <select id="telemetryDevice" required></select>
+
+                        <label for="metric">Metric</label>
+                        <input id="metric" required placeholder="Temperature">
+
+                        <label for="dataType">Data Type</label>
+                        <select id="dataType">
+                            <option value="double">double / float</option>
+                            <option value="int">int</option>
+                            <option value="bool">bool</option>
+                        </select>
+
+                        <label for="value">Value</label>
+                        <input id="value" required placeholder="24.5">
+
+                        <label for="unit">Unit</label>
+                        <input id="unit" placeholder="°C / W / %">
+
+                        <button class="primary-btn" type="submit">Send Telemetry</button>
+                    </form>
+
+                    <p id="telemetryMessage" class="form-message"></p>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">SENSOR PROFILES</span>
+                        <h3>Registered Devices</h3>
+                    </div>
+                </div>
+
+                <div id="sensorCards" class="sensor-grid"></div>
+            </section>
+
+            <section class="panel">
+                <span class="eyebrow">FILE ATTACHMENT</span>
+                <h3>Attach Device Configuration, Log or Photo</h3>
+
+                <form id="uploadForm" class="upload-row">
+                    <select id="uploadDevice" required></select>
+                    <input id="fileInput" type="file" required>
+                    <button class="primary-btn" type="submit">Upload File</button>
+                </form>
+
+                <p id="uploadMessage" class="form-message"></p>
+            </section>
+
+            <section class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">LATEST DATA</span>
+                        <h3>Telemetry History</h3>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Device</th>
+                                <th>Metric</th>
+                                <th>Type</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="telemetryTable"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel">
+                <span class="eyebrow">REQUIRED C# DEMOS</span>
+                <h3>Advanced OOP & Data Structure Evidence</h3>
+
+                <div class="demo-buttons">
+                    <button class="secondary-btn" type="button" onclick="runDemo('/api/demo/operator-overload')">
+                        Operator Overloading
+                    </button>
+
+                    <button class="secondary-btn" type="button" onclick="runDemo('/api/telemetry/demo-batch', 'POST')">
+                        Jagged Array → List
+                    </button>
+
+                    <button class="secondary-btn" type="button" onclick="runDemo('/api/demo/recursive-validation')">
+                        Recursive Validation
+                    </button>
+                </div>
+
+                <pre id="demoOutput">Click a demonstration button.</pre>
+            </section>
+        </div>
+
+        <div id="commandDashboard" hidden>
+            <section class="stats-grid">
+                <article class="stat-card">
+                    <small>Available Devices</small>
+                    <strong id="commandDeviceCount">0</strong>
+                </article>
+
+                <article class="stat-card">
+                    <small>Commands Submitted</small>
+                    <strong id="commandCount">0</strong>
+                </article>
+
+                <article class="stat-card">
+                    <small>Critical Commands</small>
+                    <strong id="criticalCommandCount">0</strong>
+                </article>
+            </section>
+
+            <section class="two-column">
+                <div class="panel">
+                    <span class="eyebrow">DEVICE CONTROL</span>
+                    <h3>Send Device Command</h3>
+
+                    <form id="commandForm">
+                        <label for="commandDevice">Select Device</label>
+                        <select id="commandDevice" required></select>
+
+                        <label for="commandAction">Command</label>
+                        <select id="commandAction" required>
+                            <option value="">Choose a command</option>
+                            <option value="START">Start Device</option>
+                            <option value="STOP">Stop Device</option>
+                            <option value="RESTART">Restart Device</option>
+                            <option value="STATUS">Request Status</option>
+                        </select>
+
+                        <label for="commandPriority">Priority</label>
+                        <select id="commandPriority">
+                            <option value="Normal">Normal</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+
+                        <button class="primary-btn" type="submit">Send Command</button>
+                    </form>
+
+                    <p id="commandMessage" class="form-message"></p>
+
+                    <button class="secondary-btn" type="button" id="undoCommandBtn">
+                        Undo Last Command
+                    </button>
+                </div>
+
+                <div class="panel">
+                    <span class="eyebrow">PREDICTIVE ENGINE</span>
+                    <h3>Suggested Actions</h3>
+                    <p id="suggestionMessage">
+                        Recommendations will appear here when the predictive engine is connected.
+                    </p>
+                    <div id="suggestions" class="alert-list"></div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <span class="eyebrow">REAL-TIME MONITORING</span>
+                        <h3>Command Stream</h3>
+                    </div>
+                    <button class="secondary-btn" type="button" onclick="loadCommandStream()">
+                        Refresh
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Device</th>
+                                <th>Command</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commandTable">
+                            <tr>
+                                <td colspan="5">Command backend not connected yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel">
+                <span class="eyebrow">SEARCH & HISTORY</span>
+                <h3>Find Commands</h3>
+
+                <label for="commandSearch">Search by device or command</label>
+                <input id="commandSearch" placeholder="Search command history...">
+
+                <p id="commandSearchMessage" class="form-message"></p>
+            </section>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
